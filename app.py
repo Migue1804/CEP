@@ -5,7 +5,20 @@ import numpy as np
 import scipy.stats as stats
 
 def main():
-    st.image("CEP.jpg", width=720) 
+    st.image("CEP.jpg", width=720)
+    with st.sidebar: 
+        st.title("Instrucciones")
+        st.write("¡Bienvenido a la aplicación de control de calidad!")
+        st.write("Por favor sigue las instrucciones paso a paso para utilizar la herramienta correctamente.")
+        st.header("Pasos:")
+        st.write("1. Ingresa el nombre de la variable.")
+        st.write("2. Establece los límites específicados inferior y superior.")
+        st.write("3. Ingresa los datos en la sección 'Ingreso de Datos'. Cada vez que aumentes el número de datos, se habilitará un campo para ingresar un nuevo dato.")
+        st.write("4. Observa los gráficos de control, histograma y curva normal.")
+        st.write("5. Analiza los índices de capacidad de proceso y el nivel Sigma.")
+        st.write("6. ¡Listo! Puedes visualizar los datos ingresados en la sección 'Datos Ingresados'.")
+        st.write("...")
+
     st.sidebar.header("Configuración del Gráfico de Control")
     variable_name = st.sidebar.text_input("Nombre de la Variable:")
     lower_spec_limit = st.sidebar.number_input("Límite Especificado Inferior:", step=0.01)
