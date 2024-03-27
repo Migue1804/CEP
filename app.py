@@ -31,33 +31,118 @@ def main():
     # Convertir la lista de datos en un DataFrame
     data_df = pd.DataFrame({"Datos": data_entries, "Rango": data_ranges})
 
-    # Mostrar datos ingresados
-    st.subheader("Datos Ingresados")
-    if not data_df.empty:
-        st.write(data_df)  # Mostramos la tabla con los datos
 
     # Gráficos de Control
     st.subheader("Gráficos de Control")
     if not data_df.empty:
-        # Crear gráfico de Medias
-        fig_means = go.Figure()
-        fig_means.add_trace(go.Scatter(x=np.arange(1, len(data_entries)+1), y=data_entries, mode='lines+markers', name='Lecturas'))
-        fig_means.add_hline(y=np.mean(data_entries), line_dash="dash", line_color="red", annotation_text="Media Global", annotation_position="bottom right")
-        fig_means.update_layout(title="Gráfico de Medias",
-                          xaxis_title="Lecturas",
-                          yaxis_title="Valores")
-        
+        # Calcular estadísticas para el gráfico de control
+        media_datos = np.mean(data_df["Datos"])
+        rango_moving = data_df["Rango"].dropna()  # Eliminar NaN
+        media_rango_moving = np.mean(rango_moving)
+        limite_superior_i = media_datos + (2.66 * media_rango_moving)
+        limite_inferior_i = media_datos - (2.66 * media_rango_moving)
+        # Calcular límites de control estadístico para el rango móvil
+        limite_superior_rango_moving = media_rango_moving + (2.66 * media_rango_moving)
+        limite_inferior_rango_moving = media_rango_moving - (2.66 * media_rango_moving)
+
+        # Crear el gráfico de control I-MR en Plotly
+        fig_i_mr = go.Figure()
+
+        # Calcular límites de especificación
+        df_proceso = data_df.copy()  # Copiar los datos para el gráfico de control
+        df_proceso['LSE'] = upper_spec_limit
+        df_proceso['LIE'] = lower_spec_limit
+
+        fig_i_mr.add_trace(go.Scatter(x=np.arange(1, len(data_entries) + 1), y=data_entries, mode='markers+lines', name='Datos'))
+        fig_i_mr.add_trace(go.Scatter(x=np.arange(1, len(data_entries) + 1), y=[media_datos] * len(data_entries), mode='lines', name='Media', line=dict(color='blue', dash='dot')))
+        fig_i_mr.add_trace(go.Scatter(x=np.arange(1, len(data_entries) + 1), y=[limite_superior_i] * len(data_entries), mode='lines', name='Límite Superior Control', line=dict(color='blue', dash='dash')))
+        fig_i_mr.add_trace(go.Scatter(x=np.arange(1, len(data_entries) + 1), y=[limite_inferior_i] * len(data_entries), mode='lines', name='Límite Inferior Control', line=dict(color='blue', dash='dash')))
+        fig_i_mr.add_trace(go.Scatter(x=np.arange(1, len(data_entries) + 1), y=[upper_spec_limit] * len(data_entries), mode='lines', name='Límite Superior Especificación', line=dict(color='red')))
+        fig_i_mr.add_trace(go.Scatter(x=np.arange(1, len(data_entries) + 1), y=[lower_spec_limit] * len(data_entries), mode='lines', name='Límite Inferior Especificación', line=dict(color='red')))
+
+        # Agregar rectángulos horizontales para las zonas de alerta
+        zona_roja = go.layout.Shape(
+            type="rect",
+            x0=1,
+            x1=len(data_entries),
+            y0=lower_spec_limit,
+            y1=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3,
+            fillcolor="red",
+            opacity=0.3,
+            layer="below",
+            line_width=0,
+        )
+
+        zona_amarilla = go.layout.Shape(
+            type="rect",
+            x0=1,
+            x1=len(data_entries),
+            y0=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3,
+            y1=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3 * 2,
+            fillcolor="yellow",
+            opacity=0.3,
+            layer="below",
+            line_width=0,
+        )
+
+        zona_verde = go.layout.Shape(
+            type="rect",
+            x0=1,
+            x1=len(data_entries),
+            y0=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3 * 2,
+            y1=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3 * 4,
+            fillcolor="green",
+            opacity=0.3,
+            layer="below",
+            line_width=0,
+        )
+
+        zona_roja2 = go.layout.Shape(
+            type="rect",
+            x0=1,
+            x1=len(data_entries),
+            y0=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3 * 5,
+            y1=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3 * 6,
+            fillcolor="red",
+            opacity=0.3,
+            layer="below",
+            line_width=0,
+        )
+
+        zona_amarilla2 = go.layout.Shape(
+            type="rect",
+            x0=1,
+            x1=len(data_entries),
+            y0=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3 * 4,
+            y1=lower_spec_limit + ((upper_spec_limit - lower_spec_limit) / 2) / 3 * 5,
+            fillcolor="yellow",
+            opacity=0.3,
+            layer="below",
+            line_width=0,
+        )
+
+        fig_i_mr.update_layout(
+            title='Gráfico de Control I-MR',
+            xaxis_title='Muestra',
+            yaxis_title='Datos',
+            shapes=[zona_roja, zona_amarilla, zona_verde, zona_amarilla2, zona_roja2],  # Agregar las zonas de alerta
+            legend=dict(x=0, y=-0.2, orientation='h')  # Posición de la leyenda en la parte inferior y centrada horizontalmente
+        )
+
+        st.plotly_chart(fig_i_mr)
+
         # Crear gráfico de Rangos
         fig_ranges = go.Figure()
         fig_ranges.add_trace(go.Scatter(x=np.arange(1, len(data_ranges)+1), y=data_ranges, mode='lines+markers', name='Rangos'))
-        fig_ranges.add_hline(y=np.nanmean(data_ranges), line_dash="dash", line_color="blue", annotation_text="Media de Rangos", annotation_position="top right")
+        fig_ranges.add_hline(y=np.nanmean(data_ranges), line_dash="dot", line_color="blue", annotation_text="Media de Rangos", annotation_position="top right")
+        fig_ranges.add_trace(go.Scatter(x=np.arange(1, len(data_ranges) + 1), y=[limite_superior_rango_moving] * len(data_ranges), mode='lines', name='Límite Superior Control', line=dict(color='blue', dash='dash')))
+        fig_ranges.add_trace(go.Scatter(x=np.arange(1, len(data_ranges) + 1), y=[limite_inferior_rango_moving] * len(data_ranges), mode='lines', name='Límite Inferior Control', line=dict(color='blue', dash='dash')))
         fig_ranges.update_layout(title="Gráfico de Rangos",
                           xaxis_title="Lecturas",
-                          yaxis_title="Valores")
-        
-        st.plotly_chart(fig_means)
+                          yaxis_title="Valores",
+                          legend=dict(x=0, y=-0.2, orientation='h') )
         st.plotly_chart(fig_ranges)
-
+        
     # Histograma y Curva Normal
     st.subheader("Histograma y Curva Normal")
     if not data_df.empty:
@@ -98,6 +183,11 @@ def main():
         st.write(f"DPMO Superior: {DPMO_upper}")
         st.write(f"DPMO Inferior: {DPMO_lower}")
         st.write(f"Nivel Sigma: {sigma}")
+
+    # Mostrar datos ingresados
+    st.subheader("Datos Ingresados")
+    if not data_df.empty:
+        st.write(data_df)  # Mostramos la tabla con los datos
 
 if __name__ == "__main__":
     main()
