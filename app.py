@@ -21,7 +21,7 @@ def main():
         st.markdown("- **Paso 6:** ¡Listo! Puedes visualizar los datos ingresados en la sección 'Datos Ingresados'.")     
         # Opciones adicionales para agregar iconos o imágenes
         st.markdown("### Información Adicional:")
-        st.markdown("👉 **Para más información: https://www.linkedin.com/in/josemaguilar/**")
+        st.markdown("👉 **Para más información: [LinkedIn](https://www.linkedin.com/in/josemaguilar/)**")
 
     st.sidebar.header("Configuración del Gráfico de Control")
     variable_name = st.sidebar.text_input("Nombre de la Variable:")
