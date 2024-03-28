@@ -18,7 +18,7 @@ def main():
         st.markdown("- **Paso 3:** Ingresa los datos en la sección 'Ingreso de Datos'. Cada vez que aumentes el número de datos, se habilitará un campo para ingresar un nuevo dato.")
         st.markdown("- **Paso 4:** Observa los gráficos de control, histograma y curva normal.")
         st.markdown("- **Paso 5:** Analiza los índices de capacidad de proceso y el nivel Sigma.")
-        st.markdown("- **Paso 6:** ¡Listo! Puedes visualizar los datos ingresados en la sección 'Datos Ingresados'.")        st.write("1. Ingresa el nombre de la variable.")
+        st.markdown("- **Paso 6:** ¡Listo! Puedes visualizar los datos ingresados en la sección 'Datos Ingresados'.")     
         # Opciones adicionales para agregar iconos o imágenes
         st.markdown("### Información Adicional:")
         st.markdown("👉 **Para más información: https://www.linkedin.com/in/josemaguilar/**")
