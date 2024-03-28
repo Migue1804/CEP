@@ -9,15 +9,19 @@ def main():
     with st.sidebar: 
         st.title("Instrucciones")
         st.write("¡Bienvenido a la aplicación de control de calidad!")
-        st.write("Por favor sigue las instrucciones paso a paso para utilizar la herramienta correctamente.")
-        st.header("Pasos:")
-        st.write("1. Ingresa el nombre de la variable.")
-        st.write("2. Establece los límites específicados inferior y superior.")
-        st.write("3. Ingresa los datos en la sección 'Ingreso de Datos'. Cada vez que aumentes el número de datos, se habilitará un campo para ingresar un nuevo dato.")
-        st.write("4. Observa los gráficos de control, histograma y curva normal.")
-        st.write("5. Analiza los índices de capacidad de proceso y el nivel Sigma.")
-        st.write("6. ¡Listo! Puedes visualizar los datos ingresados en la sección 'Datos Ingresados'.")
-        st.write("...")
+        st.markdown("Por favor sigue las instrucciones paso a paso para utilizar la herramienta correctamente.")
+        
+        # Pasos con diferentes formatos
+        st.markdown("### Pasos:")
+        st.markdown("- **Paso 1:** Ingresa el nombre de la variable.")
+        st.markdown("- **Paso 2:** Establece los límites específicados inferior y superior.")
+        st.markdown("- **Paso 3:** Ingresa los datos en la sección 'Ingreso de Datos'. Cada vez que aumentes el número de datos, se habilitará un campo para ingresar un nuevo dato.")
+        st.markdown("- **Paso 4:** Observa los gráficos de control, histograma y curva normal.")
+        st.markdown("- **Paso 5:** Analiza los índices de capacidad de proceso y el nivel Sigma.")
+        st.markdown("- **Paso 6:** ¡Listo! Puedes visualizar los datos ingresados en la sección 'Datos Ingresados'.")        st.write("1. Ingresa el nombre de la variable.")
+        # Opciones adicionales para agregar iconos o imágenes
+        st.markdown("### Información Adicional:")
+        st.markdown("👉 **Para más información: https://www.linkedin.com/in/josemaguilar/**")
 
     st.sidebar.header("Configuración del Gráfico de Control")
     variable_name = st.sidebar.text_input("Nombre de la Variable:")
