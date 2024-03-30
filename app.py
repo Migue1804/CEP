@@ -161,7 +161,7 @@ def main():
         st.plotly_chart(fig_ranges)
         
     # Histograma y Curva Normal
-    st.subheader("Histograma y Curva Normal")
+    #st.subheader("Histograma y Curva Normal")
     if not data_df.empty:
         fig_hist_normal = go.Figure()
 
