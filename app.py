@@ -50,7 +50,7 @@ def main():
 
 
     # Gráficos de Control
-    st.subheader("Gráficos de Control")
+    #st.subheader("Gráficos de Control")
     if not data_df.empty:
         # Calcular estadísticas para el gráfico de control
         media_datos = np.mean(data_df["Datos"])
